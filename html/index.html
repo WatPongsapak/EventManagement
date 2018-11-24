@@ -1,0 +1,40 @@
+{{define "body_content"}}
+<div class="container">
+    <a href="add_activity"><button type="button" class="btn btn-outline-dark"><span class="glyphicon glyphicon-plus"
+                aria-hidden="true"></span>Add</button></a>
+    <table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Speaker</th>
+                <th>Description</th>
+                <th>Limit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .Posts}}
+            <tr>
+                <td>{{.ID}}</td>
+                <td>{{.Name}}</td>
+                <td>{{.Location}}</td>
+                <td>{{.Speaker}}</td>
+                <td>{{.Description}}</td>
+                <td>{{.Maxjoin}}</td>
+            </tr>
+            {{end}}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Speaker</th>
+                <th>Description</th>
+                <th>Limit</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+{{end}}

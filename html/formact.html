@@ -1,0 +1,59 @@
+{{define "body_content"}}
+<script src="https://momentjs.com/downloads/moment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script>
+$(function() {
+  $('input[name="datetimes"]').daterangepicker({
+    timePicker: true,
+    startDate: moment().startOf('hour'),
+    endDate: moment().startOf('hour').add(1, 'hour'),
+    locale: {
+      format: 'DD/MM/YY hh:mm A'
+    }
+  });
+});</script>
+<div class="card" style="width: 40rem;margin:auto;">
+    <div class="card-top" style="padding: 1.25rem;background-color: wheat;color: white">
+        <h4>เพิ่มกิจกรรม</h4>
+    </div>
+    <div class="card-body">
+        <form action="/activity" method="post">
+            <div class="form-group">
+                <label for="inputName">Name</label>
+                <input type="text" class="form-control" name="name" id="inputName" placeholder="Enter Activity Name">
+            </div>
+
+            <div class="form-group">
+                <label for="inputDescription">Description</label>
+                <textarea class="form-control" id="inputDescription" name="description" placeholder="Add Description"
+                    rows="5" id="comment"></textarea>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-10">
+                    <label for="inputSpeaker">Speaker</label>
+                    <input type="text" class="form-control" name="speaker" id="inputSpeaker" placeholder="Speaker Name">
+                </div>   
+                <div class="form-group col-md-2">
+                    <label for="inputMax">Limit</label>
+                    <input type="number" class="form-control" name="max" id="inputMax" placeholder="Limit">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="inputLocation">Location</label>
+                    <input type="text" class="form-control" name="location" id="inputLocation" placeholder="Enter Activity Location">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputLocation">Location</label>
+                    <input type="text" class="form-control" name="datetimes" id="inputDateTime">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+    </div>
+</div>
+{{end}}
