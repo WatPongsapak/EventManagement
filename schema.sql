@@ -22,3 +22,4 @@ CREATE TABLE pinactivities(
     phone TEXT,
     PRIMARY KEY (activities_id ,employee_code)
 );
+edited
