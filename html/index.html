@@ -5,36 +5,23 @@
     <table id="example" class="display" style="width:100%">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Name</th>
-                <th>Location</th>
-                <th>Speaker</th>
                 <th>Description</th>
                 <th>Limit</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
             {{range .Posts}}
             <tr>
-                <td>{{.ID}}</td>
-                <td>{{.Name}}</td>
-                <td>{{.Location}}</td>
-                <td>{{.Speaker}}</td>
+                <td>{{.Name}} รุ่น{{.Round}}</td>
                 <td>{{.Description}}</td>
                 <td>{{.Maxjoin}}</td>
+                <td><a href="activity/{{.ID}}"><button class="btn btn-primary">edit</button></a></td>
+                <td><a href="activity/{{.ID}}"><button class="btn btn-primary">edit</button></a></td>
             </tr>
             {{end}}
         </tbody>
-        <tfoot>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Location</th>
-                <th>Speaker</th>
-                <th>Description</th>
-                <th>Limit</th>
-            </tr>
-        </tfoot>
     </table>
 </div>
 {{end}}

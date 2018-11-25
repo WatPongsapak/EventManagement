@@ -1,0 +1,27 @@
+{{define "body_content"}}
+<div class="card" style="width: 40rem;margin:auto;">
+    <div class="card-top" style="padding: 1.25rem;background-color: wheat;color: white">
+        <h4>Regis</h4>
+    </div>
+    <div class="card-body">
+        <form action="/pinact" method="post">
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label for="inputSpeaker">Name</label>
+                    <input type="text" class="form-control" name="name" placeholder="Name">
+                </div>   
+                <div class="form-group col-md-4">
+                    <label for="inputMax">Employee ID</label>
+                    <input type="number" class="form-control" name="employeeid" placeholder="Employee ID">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="inputMax">Phone</label>
+                    <input type="number" class="form-control" name="phone" placeholder="Phone">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+{{end}}

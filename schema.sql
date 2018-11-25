@@ -5,8 +5,10 @@ CREATE TABLE activities(
     speaker TEXT,
     description TEXT,
     max_joinable INTEGER,
-    start_datetime TIMESTAMP,
-    end_datetime TIMESTAMP,
+    start_date DATE,
+    end_date DATE,
+    start_time TIME,
+    end_time TIME,
     round INTEGER
 );
 
@@ -22,4 +24,3 @@ CREATE TABLE pinactivities(
     phone TEXT,
     PRIMARY KEY (activities_id ,employee_code)
 );
-edited
