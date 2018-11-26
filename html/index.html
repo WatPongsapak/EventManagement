@@ -1,4 +1,15 @@
 {{define "body_content"}}
+<script>
+    function deleteAct(id) {
+        if (confirm('ยืนยันที่จะลบ กิจกรรมนี้')) {
+            window.location.replace("activity/del/" + id);
+        }
+    }
+
+    $(function () {
+        $('#example').DataTable();
+    });
+</script>
 <div class="container">
     <a href="add_activity"><button type="button" class="btn btn-outline-dark"><span class="glyphicon glyphicon-plus"
                 aria-hidden="true"></span>Add</button></a>
@@ -17,8 +28,8 @@
                 <td>{{.Name}} รุ่น{{.Round}}</td>
                 <td>{{.Description}}</td>
                 <td>{{.Maxjoin}}</td>
-                <td><a href="activity/{{.ID}}"><button class="btn btn-primary">edit</button></a></td>
-                <td><a href="activity/{{.ID}}"><button class="btn btn-primary">edit</button></a></td>
+                <td><a href="edit_activity/{{.ID}}"><button class="btn btn-primary">แก้ไข</button></a>
+                    <button class="btn btn-primary" onclick="deleteAct('{{.ID}}')">ลบ</button></td>
             </tr>
             {{end}}
         </tbody>

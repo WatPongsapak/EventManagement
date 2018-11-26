@@ -1,13 +1,36 @@
 {{define "body_content"}}
+<script src="https://momentjs.com/downloads/moment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script>
+    $(function () {
+        $('input[name="daterange"]').daterangepicker({}, function (start, end, label) {
+            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        });
+        $('input[name="timerange"]').daterangepicker({
+            timePicker: true,
+            timePickerIncrement: 1,
+            locale: {
+                format: 'hh:mm a'
+            }
+        }).on('show.daterangepicker', function (ev, picker) {
+            picker.container.find(".calendar-table").hide();
+        });
+    });
+
+</script>
 <div class="card" style="width: 40rem;margin:auto;">
     <div class="card-top" style="padding: 1.25rem;background-color: wheat;color: white">
-        <h4>เพิ่มกิจกรรม</h4>
+        <h4>{{if eq .Mode "add"}}เพิ่มกิจกรรม{{else}}แก้ไขกิจกรรม{{end}}</h4>
     </div>
     <div class="card-body">
-        <form action="/activity/{{if .A}}{{ .A.ID }}{{end}}" method="post">
+        <form action='/activity{{if eq .Mode "edit"}}/{{ .A.ID }}{{end}}' method="post">
             <div class="form-group">
                 <label for="inputName">Name</label>
-                <input type="text" class="form-control" name="name" id="inputName" placeholder="Enter Activity Name" value="{{if .A}}{{ .A.Name }}{{end}}">
+                <input type="text" class="form-control" name="name" id="inputName" placeholder="Enter Activity Name"
+                    value="{{if .A}}{{ .A.Name }}{{end}}">
             </div>
             <div class="form-group">
                 <label for="inputDescription">Description</label>
@@ -17,8 +40,9 @@
             <div class="row">
                 <div class="form-group col-md-10">
                     <label for="inputSpeaker">Speaker</label>
-                    <input type="text" class="form-control" name="speaker" id="inputSpeaker" placeholder="Speaker Name" value="{{if .A}}{{ .A.Speaker }}{{end}}">
-                </div>   
+                    <input type="text" class="form-control" name="speaker" id="inputSpeaker" placeholder="Speaker Name"
+                        value="{{if .A}}{{ .A.Speaker }}{{end}}">
+                </div>
                 <div class="form-group col-md-2">
                     <label for="inputMax">Limit</label>
                     <input type="number" class="form-control" name="max" id="inputMax" placeholder="Limit" value="{{if .A}}{{ .A.Maxjoin }}{{end}}">
@@ -26,16 +50,17 @@
             </div>
             <div class="form-group">
                 <label for="inputLocation">Location</label>
-                <input type="text" class="form-control" name="location" id="inputLocation" placeholder="Enter Activity Location" value="{{if .A}}{{ .A.Location }}{{end}}">
+                <input type="text" class="form-control" name="location" id="inputLocation" placeholder="Enter Activity Location"
+                    value="{{if .A}}{{ .A.Location }}{{end}}">
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
                     <label for="inputLocation">Date</label>
-                    <input type="text" class="form-control" name="daterange" value="" value="{{if .A}}{{ .A.StartDate }} - {{ .A.EndDate }}{{end}}"/>
+                    <input type="text" class="form-control" name="daterange" value="{{if .A}}{{ .Date }}{{end}}" />
                 </div>
                 <div class="form-group col-md-6">
                     <label for="inputLocation">Time</label>
-                    <input type="text" class="form-control" name="timerange" value="" value="{{if .A}}{{ .A.StartTime }} - {{ .A.EndTime }}{{end}}"/>
+                    <input type="text" class="form-control" name="timerange" value="{{if .A}}{{ .Time }}{{end}}" />
                 </div>
             </div>
 
