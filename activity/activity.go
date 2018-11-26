@@ -19,6 +19,7 @@ type Activity struct {
 	StartTime   time.Time
 	EndTime     time.Time
 	Round       int
+	Amount      int
 }
 
 type Manager struct {
@@ -76,13 +77,13 @@ func (m *Manager) Delete(a *Activity) error {
 
 func (m *Manager) All() ([]Activity, error) {
 	users := []Activity{}
-	rows, err := m.DB.Query("SELECT id, name, location, speaker, description, max_joinable, start_date, end_date, start_time, end_time, round FROM activities")
+	rows, err := m.DB.Query("SELECT id, name, location, speaker, description, max_joinable, start_date, end_date, start_time, end_time, round, (SELECT COUNT(*) FROM pinactivities WHERE pinactivities.activities_id = activities.id) AS amount FROM activities")
 	if err != nil {
 		return nil, err
 	}
 	for rows.Next() {
 		var a Activity
-		err := rows.Scan(&a.ID, &a.Name, &a.Location, &a.Speaker, &a.Description, &a.Maxjoin, &a.StartDate, &a.EndDate, &a.StartTime, &a.EndTime, &a.Round)
+		err := rows.Scan(&a.ID, &a.Name, &a.Location, &a.Speaker, &a.Description, &a.Maxjoin, &a.StartDate, &a.EndDate, &a.StartTime, &a.EndTime, &a.Round, &a.Amount)
 		if err != nil {
 			return nil, err
 		}

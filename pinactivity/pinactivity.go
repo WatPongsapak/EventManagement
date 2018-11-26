@@ -59,14 +59,3 @@ func (m *Manager) ResetStorage() {
 		log.Fatal(err)
 	}
 }
-
-func (m *Manager) Last() Pinactivity {
-	var p Pinactivity
-	stmt := "SELECT id, name, location, speaker, description, Max_joinable FROM activities ORDER BY id DESC LIMIT 1"
-	row := m.DB.QueryRow(stmt)
-	err := row.Scan(&p.ActivitiesID, &p.EmployeeCode, &p.Name, &p.Phone)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return p
-}

@@ -16,20 +16,25 @@
     <table id="example" class="display" style="width:100%">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Limit</th>
-                <th>Action</th>
+                <th>ชื่อกิจกรรม</th>
+                <th>รายะรเอียด</th>
+                <th>จำนวน</th>
+                <th>ปุ่ม</th>
             </tr>
         </thead>
         <tbody>
+            {{$admin := .Admin}}
             {{range .Posts}}
             <tr>
                 <td>{{.Name}} รุ่น{{.Round}}</td>
                 <td>{{.Description}}</td>
-                <td>{{.Maxjoin}}</td>
-                <td><a href="edit_activity/{{.ID}}"><button class="btn btn-primary">แก้ไข</button></a>
+                <td>{{if eq .Maxjoin 0}}ไม่จำกัด{{else}}{{ .Amount }}/{{.Maxjoin}}{{if eq .Maxjoin .Amount}} เต็ม{{end}}{{end}}</td>
+                <td><a href="pin_activity/{{.ID}}"><button class="btn btn-primary">รายระเอียด</button></a>
+                    {{ $admin}}
+                    {{if $admin}}
+                    <a href="edit_activity/{{.ID}}"><button class="btn btn-primary">แก้ไข</button></a>
                     <button class="btn btn-primary" onclick="deleteAct('{{.ID}}')">ลบ</button></td>
+                    {{end}}
             </tr>
             {{end}}
         </tbody>

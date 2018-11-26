@@ -1,0 +1,68 @@
+{{define "body_content"}}
+<script>
+    
+        $(function () {
+            $('#example').DataTable();
+        });
+    </script>
+<div class="card" style="width: 40rem;margin:auto;">
+    <div class="card-top" style="padding: 1.25rem;background-color: wheat;color: white">
+        <h4>รายระเอียด</h4>
+    </div>
+    <div class="card-body">
+        <table>
+            <tr>
+                <th>ชื่อกิจกรรม</th>
+                <td>{{ .A.Name }}</td>
+            </tr>
+            <tr>
+                <th>รายระเอียด</th>
+                <td>{{ .A.Description }}</td>
+            </tr>
+            <tr>
+                <th>ผู้บรรยาย</th>
+                <td>{{ .A.Speaker }}</td>
+            </tr>
+            <tr>
+                <th>จำนวนสูงสุด</th>
+                <td>{{ .A.Maxjoin }}</td>
+            </tr>
+            <tr>
+                <th>สถานที่</th>
+                <td>{{ .A.Location }}</td>
+            </tr>
+            <tr>
+                <th>วัน</th>
+                <td>{{ .Date }}</td>
+            </tr>
+            <tr>
+                <th>เวลา</th>
+                <td>{{ .Time }}</td>
+            </tr>
+        </table>
+        <br>
+
+        <a href="/export_excel/{{.ID}}"><button class="btn btn-primary">Export</button></a>
+
+        <h4>ผลการลงทะเบียน</h4>
+        <table id="example" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>รหัสพนักงาน</th>
+                        <th>ชื่อ</th>
+                        <th>เบอิร์โทรศัพท์</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .P}}
+                    <tr>
+                        <td>{{.EmployeeCode}}</td>
+                        <td>{{.Name}}</td>
+                        <td>{{.Phone}}</td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+    </div>
+</div>
+{{end}}
