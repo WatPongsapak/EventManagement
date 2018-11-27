@@ -53,9 +53,9 @@ func (m *Manager) Update(a *Activity) error {
 }
 
 func (m *Manager) FindByID(id int) (*Activity, error) {
-	row := m.DB.QueryRow("SELECT id, name, location, speaker, description, max_joinable, start_date, end_date, start_time, end_time, round FROM activities WHERE id = $1", id)
+	row := m.DB.QueryRow("SELECT id, name, location, speaker, description, max_joinable, start_date, end_date, start_time, end_time, round, (SELECT COUNT(*) FROM pinactivities WHERE pinactivities.activities_id = activities.id) FROM activities WHERE id = $1", id)
 	var a Activity
-	err := row.Scan(&a.ID, &a.Name, &a.Location, &a.Speaker, &a.Description, &a.Maxjoin, &a.StartDate, &a.EndDate, &a.StartTime, &a.EndTime, &a.Round)
+	err := row.Scan(&a.ID, &a.Name, &a.Location, &a.Speaker, &a.Description, &a.Maxjoin, &a.StartDate, &a.EndDate, &a.StartTime, &a.EndTime, &a.Round, &a.Amount)
 	if err != nil {
 		return nil, err
 	}

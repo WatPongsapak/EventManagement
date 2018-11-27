@@ -1,16 +1,17 @@
 {{define "body_content"}}
-<div class="card" style="width: 40rem;margin:auto;">
-    <div class="card-top" style="padding: 1.25rem;background-color: wheat;color: white">
-        <h4>รายระเอียด</h4>
+<br>
+<div class="card" style="max-width: 550px;">
+    <div class="card-top">
+        <h4>รายละเอียด</h4>
     </div>
     <div class="card-body">
-        <table>
+        <table style="text-align: left;">
             <tr>
                 <th>ชื่อกิจกรรม</th>
                 <td>{{ .A.Name }}</td>
             </tr>
             <tr>
-                <th>รายระเอียด</th>
+                <th>รายละเอียด</th>
                 <td>{{ .A.Description }}</td>
             </tr>
             <tr>
@@ -19,7 +20,7 @@
             </tr>
             <tr>
                 <th>จำนวนสูงสุด</th>
-                <td>{{ .A.Maxjoin }}</td>
+                <td>{{ .A.Maxjoin }} คน</td>
             </tr>
             <tr>
                 <th>สถานที่</th>
@@ -33,11 +34,16 @@
                 <th>เวลา</th>
                 <td>{{ .Time }}</td>
             </tr>
+            <tr>
+                <th>จำนวน</th>
+                <td>{{if eq .A.Maxjoin 0}}ไม่จำกัด{{else}}{{ .A.Amount }}/{{ .A.Maxjoin }}{{if eq .A.Maxjoin .A.Amount}}
+                    เต็ม{{end}}{{end}}</td>
+            </tr>
         </table>
         <br>
 
-        <h4>ลงทะเบียน</h4>
-        <form action="/pinact/{{ .ID }}" method="post">
+        <h4 {{ if ge .A.Amount .A.Maxjoin }}{{ if ne .A.Maxjoin 0 }}hidden{{end}}{{end}}>ลงทะเบียน</h4>
+        <form action="/pinact/{{ .ID }}" method="post" {{ if ge .A.Amount .A.Maxjoin }}{{ if ne .A.Maxjoin 0 }}hidden{{end}}{{end}}>
             <div class="row">
                 <div class="form-group col-md-4">
                     <label for="inputSpeaker">ชื่อนามสกุล</label>
@@ -53,7 +59,19 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">ลงทะเบียน</button>
+            <button type="submit">ลงทะเบียน</button>
+        </form>
+        <br>
+        <h4>ถอยการลงทะเบียน</h4>
+        <form action="/unpinact/{{ .ID }}" method="post">
+            <div class="row justify-content-md-center">
+                <div class="form-group col-md-4">
+                    <label for="inputMax">รหัสพนักงาน</label>
+                    <input type="number" class="form-control" name="employeeid" placeholder="ใส่รหัสพนักงาน">
+                </div>
+            </div>
+
+            <button type="submit">ลงทะเบียน</button>
         </form>
     </div>
 </div>

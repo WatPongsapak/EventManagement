@@ -8,7 +8,6 @@ import (
 	"event-management/admin"
 	"html/template"
 	"net/http"
-	"fmt"
 	"strings"
 	"time"
 	
@@ -28,7 +27,7 @@ var store = sessions.NewCookieStore(securecookie.GenerateRandomKey(32))
 
 func (h *Handler)indexPage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
-	session, _ := store.Get(r, "cookie-name")
+	session, _ := store.Get(r, "session-name")
 	act, err := h.actManage.All()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -41,7 +40,8 @@ func (h *Handler)indexPage(w http.ResponseWriter, r *http.Request) {
 		Posts: act,
 		Admin: false,
 	}
-	if username, ok := session.Values["username"].(string); ok && username != "" {
+	
+	if username, ok := session.Values["username"]; ok && username != "" {
 		param.Admin = true
 	}
 	
@@ -54,6 +54,7 @@ func (h *Handler)indexPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler)addActivityPage(w http.ResponseWriter, r *http.Request) {
+	h.hasSession(w,r)
 	w.Header().Set("Content-Type", "text/html")
 	t,err := template.ParseFiles("html/formact.html","html/template.html")
 	err = t.ExecuteTemplate(w,"template", struct {
@@ -100,16 +101,15 @@ func (h *Handler)pinActivityPage(w http.ResponseWriter, r *http.Request) {
 
 
 func (h *Handler)editActivityPage(w http.ResponseWriter, r *http.Request) {
+	h.hasSession(w,r)
 	w.Header().Set("Content-Type", "text/html")
 	vars := mux.Vars(r)
 	id,_ := strconv.Atoi(vars["id"])
-	fmt.Println(id)
 	a,err := h.actManage.FindByID(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	fmt.Println(a)
 	t,err := template.ParseFiles("html/formact.html","html/template.html")
 	err = t.ExecuteTemplate(w,"template", struct {
 		Mode string
@@ -215,7 +215,17 @@ func (h *Handler)pinActivity(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-func (h *Handler)pinresultActivity(w http.ResponseWriter, r *http.Request) {
+func (h *Handler)unpinActivity(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+	vars := mux.Vars(r)
+	id,_ := vars["id"]
+	employeeid :=  r.FormValue("employeeid")
+	h.pinManage.Delete(employeeid,id)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func (h *Handler)pinResultActivityPage(w http.ResponseWriter, r *http.Request) {
+	h.hasSession(w,r)
 	w.Header().Set("Content-Type", "text/html")
 	vars := mux.Vars(r)
 	id,_ := strconv.Atoi(vars["id"])
@@ -305,8 +315,8 @@ func (h *Handler)generateExcel(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler)loginPage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
-	t,err := template.ParseFiles("html/formlogin.html","html/template.html")
-	err = t.ExecuteTemplate(w,"template", struct {}{})
+	t,err := template.ParseFiles("html/formlogin.html")
+	err = t.Execute(w, struct {}{})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -317,7 +327,6 @@ func (h *Handler)login(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 	username :=  r.FormValue("username")
 	password :=  r.FormValue("password")
-	fmt.Println(username,password)
 	admin, err := h.adminManage.Login(username, password)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -328,6 +337,25 @@ func (h *Handler)login(w http.ResponseWriter, r *http.Request) {
 	}
 	
 	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func (h *Handler)logout(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+	session, _ := store.Get(r, "session-name")
+	session.Options.MaxAge = -1
+    err := session.Save(r, w)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+    }
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func (h *Handler)hasSession(w http.ResponseWriter, r *http.Request) {
+	session, _ := store.Get(r, "session-name")
+	if username, ok := session.Values["username"]; ok && username != "" {
+		return
+	}
+	http.Redirect(w, r, "/admin", http.StatusSeeOther)
 }
 
 func StartServer(addr string, db *sql.DB) error {
@@ -347,16 +375,18 @@ func StartServer(addr string, db *sql.DB) error {
 	r.HandleFunc("/add_activity", h.addActivityPage).Methods("GET")
 	r.HandleFunc("/edit_activity/{id}", h.editActivityPage).Methods("GET")
 	r.HandleFunc("/pin_activity/{id}", h.pinActivityPage).Methods("GET")
-	r.HandleFunc("/pinresult/{id}", h.pinresultActivity).Methods("GET")
+	r.HandleFunc("/pinresult/{id}", h.pinResultActivityPage).Methods("GET")
 	r.HandleFunc("/export_excel/{id}", h.generateExcel).Methods("GET")
-	r.HandleFunc("/loginpage", h.loginPage).Methods("GET")
+	r.HandleFunc("/admin", h.loginPage).Methods("GET")
 
 
 	r.HandleFunc("/activity/del/{id}", h.delActivity).Methods("GET")
 	r.HandleFunc("/activity/{id}", h.editActivity).Methods("POST")
 	r.HandleFunc("/activity", h.addActivity).Methods("POST")
 	r.HandleFunc("/pinact/{id}", h.pinActivity).Methods("POST")
+	r.HandleFunc("/unpinact/{id}", h.unpinActivity).Methods("POST")
 	r.HandleFunc("/login", h.login).Methods("POST")
+	r.HandleFunc("/logout", h.logout).Methods("GET")
 	
 	
 	r.HandleFunc("/", h.indexPage).Methods("GET")

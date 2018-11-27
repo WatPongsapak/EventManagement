@@ -10,9 +10,16 @@
         $('#example').DataTable();
     });
 </script>
-<div class="container">
-    <a href="add_activity"><button type="button" class="btn btn-outline-dark"><span class="glyphicon glyphicon-plus"
-                aria-hidden="true"></span>Add</button></a>
+<br>
+<br>
+<div class="card">
+        <div class="card-top">
+                <h4>กิจกรรม</h4>
+            </div>
+            <br>
+    <a href="add_activity"><button type="button" style="float: right;"><span class="glyphicon glyphicon-plus"
+                aria-hidden="true"></span>เพิ่ม</button></a>
+    <br>
     <table id="example" class="display" style="width:100%">
         <thead>
             <tr>
@@ -23,18 +30,17 @@
             </tr>
         </thead>
         <tbody>
-            {{$admin := .Admin}}
             {{range .Posts}}
             <tr>
                 <td>{{.Name}} รุ่น{{.Round}}</td>
                 <td>{{.Description}}</td>
-                <td>{{if eq .Maxjoin 0}}ไม่จำกัด{{else}}{{ .Amount }}/{{.Maxjoin}}{{if eq .Maxjoin .Amount}} เต็ม{{end}}{{end}}</td>
-                <td><a href="pin_activity/{{.ID}}"><button class="btn btn-primary">รายระเอียด</button></a>
-                    {{ $admin}}
-                    {{if $admin}}
-                    <a href="edit_activity/{{.ID}}"><button class="btn btn-primary">แก้ไข</button></a>
-                    <button class="btn btn-primary" onclick="deleteAct('{{.ID}}')">ลบ</button></td>
-                    {{end}}
+                <td>{{if eq .Maxjoin 0}}ไม่จำกัด{{else}}{{ .Amount }}/{{.Maxjoin}}{{if ge .Amount .Maxjoin }}
+                    เต็ม{{end}}{{end}}</td>
+                <td><a href="pin_activity/{{.ID}}"><button>รายละเอียด</button></a>
+                    {{if $.Admin}}
+                    <a href="edit_activity/{{.ID}}"><button>แก้ไข</button></a>
+                    <button onclick="deleteAct('{{.ID}}')">ลบ</button></td>
+                {{end}}
             </tr>
             {{end}}
         </tbody>

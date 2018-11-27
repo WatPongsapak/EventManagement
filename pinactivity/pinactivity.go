@@ -23,9 +23,9 @@ func (m *Manager) Insert(p *Pinactivity) error {
 	return err
 }
 
-func (m *Manager) Delete(p *Pinactivity) error {
+func (m *Manager) Delete(employeecode, id string) error {
 	stmt := "DELETE FROM pinactivities WHERE employee_code = $1 AND activities_id=$2"
-	r, err := m.DB.Exec(stmt, p.EmployeeCode, p.ActivitiesID)
+	r, err := m.DB.Exec(stmt, employeecode, id)
 	effect, err := r.RowsAffected()
 	if err != nil {
 		return err

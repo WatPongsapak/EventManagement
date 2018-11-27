@@ -21,45 +21,45 @@
     });
 
 </script>
-<div class="card" style="width: 40rem;margin:auto;">
-    <div class="card-top" style="padding: 1.25rem;background-color: wheat;color: white">
+<br>
+<div class="card" style="max-width: 550px;">
+    <div class="card-top">
         <h4>{{if eq .Mode "add"}}เพิ่มกิจกรรม{{else}}แก้ไขกิจกรรม{{end}}</h4>
     </div>
     <div class="card-body">
         <form action='/activity{{if eq .Mode "edit"}}/{{ .A.ID }}{{end}}' method="post">
             <div class="form-group">
-                <label for="inputName">Name</label>
-                <input type="text" class="form-control" name="name" id="inputName" placeholder="Enter Activity Name"
-                    value="{{if .A}}{{ .A.Name }}{{end}}">
+                <label for="inputName">ชื่อกิจกรรม</label>
+                <input type="text" class="form-control" name="name" id="inputName" placeholder="ใส่ชื่อกิจกรรม" value="{{if .A}}{{ .A.Name }}{{end}}">
             </div>
             <div class="form-group">
-                <label for="inputDescription">Description</label>
-                <textarea class="form-control" id="inputDescription" name="description" placeholder="Add Description"
+                <label for="inputDescription">รายละเอียด</label>
+                <textarea class="form-control" id="inputDescription" name="description" placeholder="ใส่รายระเอียด"
                     rows="5" id="comment">{{if .A}}{{ .A.Description }}{{end}}</textarea>
             </div>
             <div class="row">
-                <div class="form-group col-md-10">
-                    <label for="inputSpeaker">Speaker</label>
-                    <input type="text" class="form-control" name="speaker" id="inputSpeaker" placeholder="Speaker Name"
+                <div class="form-group col-md-9">
+                    <label for="inputSpeaker">ผู้บรรยาย</label>
+                    <input type="text" class="form-control" name="speaker" id="inputSpeaker" placeholder="ใส่ชื่อผู้บรรยาย"
                         value="{{if .A}}{{ .A.Speaker }}{{end}}">
                 </div>
-                <div class="form-group col-md-2">
-                    <label for="inputMax">Limit</label>
-                    <input type="number" class="form-control" name="max" id="inputMax" placeholder="Limit" value="{{if .A}}{{ .A.Maxjoin }}{{end}}">
+                <div class="form-group col-md-3">
+                    <label for="inputMax">จำนวน</label>
+                    <input type="number" class="form-control" name="max" id="inputMax" placeholder="จำนวน" value="{{if .A}}{{ .A.Maxjoin }}{{end}}">
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputLocation">Location</label>
-                <input type="text" class="form-control" name="location" id="inputLocation" placeholder="Enter Activity Location"
+                <label for="inputLocation">สถานที่</label>
+                <input type="text" class="form-control" name="location" id="inputLocation" placeholder="ใส่สถานที่"
                     value="{{if .A}}{{ .A.Location }}{{end}}">
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
-                    <label for="inputLocation">Date</label>
+                    <label for="inputLocation">ช่วงวัน</label>
                     <input type="text" class="form-control" name="daterange" value="{{if .A}}{{ .Date }}{{end}}" />
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="inputLocation">Time</label>
+                    <label for="inputLocation">ช่วงเวลา</label>
                     <input type="text" class="form-control" name="timerange" value="{{if .A}}{{ .Time }}{{end}}" />
                 </div>
             </div>

@@ -1,22 +1,23 @@
 {{define "body_content"}}
 <script>
-    
-        $(function () {
-            $('#example').DataTable();
-        });
-    </script>
-<div class="card" style="width: 40rem;margin:auto;">
-    <div class="card-top" style="padding: 1.25rem;background-color: wheat;color: white">
-        <h4>รายระเอียด</h4>
+
+    $(function () {
+        $('#example').DataTable();
+    });
+</script>
+<br>
+<div class="card" style="max-width: 550px;">
+    <div class="card-top">
+        <h4>ผลการลงทะเบียน</h4>
     </div>
     <div class="card-body">
-        <table>
+        <table style="text-align: left;">
             <tr>
                 <th>ชื่อกิจกรรม</th>
                 <td>{{ .A.Name }}</td>
             </tr>
             <tr>
-                <th>รายระเอียด</th>
+                <th>รายละเอียด</th>
                 <td>{{ .A.Description }}</td>
             </tr>
             <tr>
@@ -25,7 +26,7 @@
             </tr>
             <tr>
                 <th>จำนวนสูงสุด</th>
-                <td>{{ .A.Maxjoin }}</td>
+                <td>{{ .A.Maxjoin }} คน</td>
             </tr>
             <tr>
                 <th>สถานที่</th>
@@ -41,28 +42,28 @@
             </tr>
         </table>
         <br>
-
-        <a href="/export_excel/{{.ID}}"><button class="btn btn-primary">Export</button></a>
-
+        <a href="/export_excel/{{.ID}}"><button>Export</button></a>
+        <br>
+        <br>
         <h4>ผลการลงทะเบียน</h4>
         <table id="example" class="display" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>รหัสพนักงาน</th>
-                        <th>ชื่อ</th>
-                        <th>เบอิร์โทรศัพท์</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{range .P}}
-                    <tr>
-                        <td>{{.EmployeeCode}}</td>
-                        <td>{{.Name}}</td>
-                        <td>{{.Phone}}</td>
-                    </tr>
-                    {{end}}
-                </tbody>
-            </table>
+            <thead>
+                <tr>
+                    <th>รหัสพนักงาน</th>
+                    <th>ชื่อ</th>
+                    <th>เบอิร์โทรศัพท์</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .P}}
+                <tr>
+                    <td>{{.EmployeeCode}}</td>
+                    <td>{{.Name}}</td>
+                    <td>{{.Phone}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
     </div>
 </div>
 {{end}}
