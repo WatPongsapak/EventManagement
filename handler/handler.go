@@ -81,17 +81,24 @@ func (h *Handler)pinActivityPage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	err = t.ExecuteTemplate(w,"template", struct {
+	param := struct {
 		A activity.Activity
 		Date string
 		Time string
 		ID int
+		Admin bool
 	}{
 		A : *a,
 		Date: a.StartDate.Format("01/02/2006")+" - "+a.EndDate.Format("01/02/2006"),
 		Time: a.StartTime.Format("03:04 pm")+" - "+a.EndTime.Format("03:04 pm"),
 		ID:id,
-	})
+		Admin:false,
+	}
+	session, _ := store.Get(r, "session-name")
+	if username, ok := session.Values["username"]; ok && username != "" {
+		param.Admin = true
+	}
+	err = t.ExecuteTemplate(w,"template", param)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

@@ -1,4 +1,9 @@
 {{define "body_content"}}
+<style>
+th{
+    width: 95px;
+}
+</style>
 <br>
 <div class="card" style="max-width: 550px;">
     <div class="card-top">
@@ -19,10 +24,6 @@
                 <td>{{ .A.Speaker }}</td>
             </tr>
             <tr>
-                <th>จำนวนสูงสุด</th>
-                <td>{{ .A.Maxjoin }} คน</td>
-            </tr>
-            <tr>
                 <th>สถานที่</th>
                 <td>{{ .A.Location }}</td>
             </tr>
@@ -37,40 +38,43 @@
             <tr>
                 <th>จำนวน</th>
                 <td>{{if eq .A.Maxjoin 0}}ไม่จำกัด{{else}}{{ .A.Amount }}/{{ .A.Maxjoin }}{{if eq .A.Maxjoin .A.Amount}}
-                    เต็ม{{end}}{{end}}</td>
+                    เต็ม{{end}}{{end}} คน</td>
             </tr>
         </table>
+        {{ if .Admin }}
+            <br>
+            <a href="/pinresult/{{.ID}}"><button>ผลการลงทะเบียน</button></a>
+            <br>
+        {{ end }}
         <br>
-
         <h4 {{ if ge .A.Amount .A.Maxjoin }}{{ if ne .A.Maxjoin 0 }}hidden{{end}}{{end}}>ลงทะเบียน</h4>
         <form action="/pinact/{{ .ID }}" method="post" {{ if ge .A.Amount .A.Maxjoin }}{{ if ne .A.Maxjoin 0 }}hidden{{end}}{{end}}>
             <div class="row">
                 <div class="form-group col-md-4">
                     <label for="inputSpeaker">ชื่อนามสกุล</label>
-                    <input type="text" class="form-control" name="name" placeholder="ใส่ชื่อ">
+                    <input type="text" class="form-control" name="name" placeholder="ชื่อนามสกุล">
                 </div>
                 <div class="form-group col-md-4">
                     <label for="inputMax">รหัสพนักงาน</label>
-                    <input type="number" class="form-control" name="employeeid" placeholder="ใส่รหัสพนักงาน">
+                    <input type="number" class="form-control" name="employeeid" placeholder="รหัสพนักงาน">
                 </div>
                 <div class="form-group col-md-4">
                     <label for="inputMax">เบอณืโทรศัพท์</label>
-                    <input type="number" class="form-control" name="phone" placeholder="ใส่เบอร์โทรศัพท์">
+                    <input type="number" class="form-control" name="phone" placeholder="เบอร์โทรศัพท์">
                 </div>
             </div>
 
             <button type="submit">ลงทะเบียน</button>
         </form>
         <br>
-        <h4>ถอยการลงทะเบียน</h4>
+        <h4>ถอนการลงทะเบียน</h4>
         <form action="/unpinact/{{ .ID }}" method="post">
             <div class="row justify-content-md-center">
                 <div class="form-group col-md-4">
                     <label for="inputMax">รหัสพนักงาน</label>
-                    <input type="number" class="form-control" name="employeeid" placeholder="ใส่รหัสพนักงาน">
+                    <input type="number" class="form-control" name="employeeid" placeholder="รหัสพนักงาน">
                 </div>
             </div>
-
             <button type="submit">ลงทะเบียน</button>
         </form>
     </div>
