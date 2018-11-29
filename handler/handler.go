@@ -29,6 +29,15 @@ func (h *Handler)indexPage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 	session, _ := store.Get(r, "session-name")
 	act, err := h.actManage.All()
+	for i := range act {
+		date := strings.Split(act[i].DateRange," - ")
+		if date[1] == date[0]{
+			act[i].DateRange = date[0]
+		}else{
+			act[i].DateRange = strings.Replace(act[i].DateRange, " - ", "\nถึง\n", -1)
+		}
+		act[i].TimeRange = strings.Replace(act[i].TimeRange, " - ", "\nถึง\n", -1)
+	}
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -89,8 +98,6 @@ func (h *Handler)pinActivityPage(w http.ResponseWriter, r *http.Request) {
 		Admin bool
 	}{
 		A : *a,
-		Date: a.StartDate.Format("01/02/2006")+" - "+a.EndDate.Format("01/02/2006"),
-		Time: a.StartTime.Format("03:04 pm")+" - "+a.EndTime.Format("03:04 pm"),
 		ID:id,
 		Admin:false,
 	}
@@ -259,8 +266,6 @@ func (h *Handler)pinResultActivityPage(w http.ResponseWriter, r *http.Request) {
 		P []pinactivity.Pinactivity
 	}{
 		A : *a,
-		Date: a.StartDate.Format("01/02/2006")+" - "+a.EndDate.Format("01/02/2006"),
-		Time: a.StartTime.Format("03:04 pm")+" - "+a.EndTime.Format("03:04 pm"),
 		ID:id,
 		P : p,
 	})

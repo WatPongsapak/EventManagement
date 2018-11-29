@@ -29,16 +29,16 @@ th{
             </tr>
             <tr>
                 <th>วัน</th>
-                <td>{{ .Date }}</td>
+                <td>{{ .A.DateRange }}</td>
             </tr>
             <tr>
                 <th>เวลา</th>
-                <td>{{ .Time }}</td>
+                <td>{{ .A.TimeRange }}</td>
             </tr>
             <tr>
                 <th>จำนวน</th>
                 <td>{{if eq .A.Maxjoin 0}}ไม่จำกัด{{else}}{{ .A.Amount }}/{{ .A.Maxjoin }}{{if eq .A.Maxjoin .A.Amount}}
-                    เต็ม{{end}}{{end}} คน</td>
+                    เต็ม{{else}} คน{{end}}{{end}}</td>
             </tr>
         </table>
         {{ if .Admin }}

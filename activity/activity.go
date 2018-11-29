@@ -20,6 +20,9 @@ type Activity struct {
 	EndTime     time.Time
 	Round       int
 	Amount      int
+	DateRange   string
+	TimeRange   string
+	MaxRound    int
 }
 
 type Manager struct {
@@ -59,6 +62,8 @@ func (m *Manager) FindByID(id int) (*Activity, error) {
 	if err != nil {
 		return nil, err
 	}
+	a.DateRange = a.StartDate.Format("01/02/2006") + " - " + a.EndDate.Format("01/02/2006")
+	a.TimeRange = a.StartTime.Format("03:04 pm") + " - " + a.EndTime.Format("03:04 pm")
 	return &a, nil
 }
 
@@ -77,6 +82,15 @@ func (m *Manager) Delete(a *Activity) error {
 
 func (m *Manager) All() ([]Activity, error) {
 	users := []Activity{}
+	countname := map[string]int{}
+	rows, _ := m.DB.Query("SELECT name, count(name) FROM activities GROUP BY name")
+	for rows.Next() {
+		var name string
+		var i int
+		rows.Scan(&name, &i)
+		countname[name] = i
+	}
+
 	rows, err := m.DB.Query("SELECT id, name, location, speaker, description, max_joinable, start_date, end_date, start_time, end_time, round, (SELECT COUNT(*) FROM pinactivities WHERE pinactivities.activities_id = activities.id) AS amount FROM activities")
 	if err != nil {
 		return nil, err
@@ -87,6 +101,9 @@ func (m *Manager) All() ([]Activity, error) {
 		if err != nil {
 			return nil, err
 		}
+		a.DateRange = a.StartDate.Format("01/02/2006") + " - " + a.EndDate.Format("01/02/2006")
+		a.TimeRange = a.StartTime.Format("03:04 pm") + " - " + a.EndTime.Format("03:04 pm")
+		a.MaxRound = countname[a.Name]
 		users = append(users, a)
 	}
 	return users, nil
@@ -98,22 +115,3 @@ func (m *Manager) ResetStorage() {
 		log.Fatal(err)
 	}
 }
-
-// func (m *Manager) Round(name string) int {
-// 	stmt := "SELECT round FROM activities WHERE name = $1 ORDER BY id DESC LIMIT 1"
-// 	row := m.DB.QueryRow(stmt, name)
-// 	var round int
-// 	row.Scan(&round)
-// 	return round + 1
-// }
-
-// func (m *Manager) Last() Activity {
-// 	var a Activity
-// 	stmt := "SELECT id, name, location, speaker, description, max_joinable, start_date, end_date, start_time, end_time, round FROM activities ORDER BY id DESC LIMIT 1"
-// 	row := m.DB.QueryRow(stmt)
-// 	err := row.Scan(&a.ID, &a.Name, &a.Location, &a.Speaker, &a.Description, &a.Maxjoin)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	return a
-// }
